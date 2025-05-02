@@ -30,22 +30,44 @@ class _HomePageState extends State<HomePage> {
             builder: (context, todos) {
               if (todos.isEmpty) {
                 return const Center(
-                  child: Text(
-                    'No tasks yet. Add one below!',
-                    style: TextStyle(fontSize: 16.0, color: Colors.grey),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        'No tasks yet. Add one below!',
+                        style: TextStyle(fontSize: 16.0, color: Colors.grey),
+                      ),
+                      SizedBox(height: 120),
+                    ],
                   ),
                 );
               }
-
               return ListView.builder(
-                // Items displayed using a list
-                padding: const EdgeInsets.only(
-                  bottom: 80,
-                ), // Add padding at the bottom for the footer
+                padding: const EdgeInsets.only(bottom: 80),
                 itemCount: todos.length,
                 itemBuilder: (context, index) {
                   final todo = todos[index];
-                  return TodoCard(taskName: todo.data);
+                  return Dismissible(
+                    key: Key(
+                      todo.data.toString(),
+                    ), // Ensure each item has a unique key
+                    direction: DismissDirection.horizontal,
+                    background: Container(
+                      height: 10,
+                      color: const Color.fromARGB(16, 88, 58, 58),
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: const Icon(Icons.done, color: Colors.white),
+                    ),
+                    onDismissed: (direction) {
+                      context.read<TodoCubit>().removeTodo(todo);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Task "${todo.data}" deleted')),
+                      );
+                    },
+                    child: TodoCard(taskName: todo.data),
+                  );
                 },
               );
             },
