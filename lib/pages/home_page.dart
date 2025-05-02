@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todoapp/cubit/todo_cubit.dart';
+import 'package:todoapp/models/todo.dart';
+import 'package:todoapp/pages/add_task_screen.dart';
+import 'package:todoapp/utils/glass_button.dart';
 import 'package:todoapp/utils/todo_card.dart';
 
 class HomePage extends StatefulWidget {
@@ -9,63 +14,61 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List toDoList = [
-    ['Learn App Development', false],
-    ['Drink Coffee', false],
-    ['My 4th App', false],
-  ];
-
-  void checkBoxChanged(int index) {
-    setState(() {
-      toDoList[index][1] = !toDoList[index][1];
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true, // Makes the body extend behind the footer
       appBar: AppBar(
-        //Making the App bar part with text ToDo App displayed on it
-        title: Center(
-          child: Text(
-            'ToDo App',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
+        // Making the App bar part with text ToDo App displayed on it
+        title: const Center(
+          child: Text('T O D O', style: TextStyle(fontWeight: FontWeight.bold)),
         ),
       ),
-      body: ListView.builder(
-        //items displayed using a list
-        itemCount: toDoList.length,
-        itemBuilder: (context, index) {
-          return TodoCard(
-            taskName: toDoList[index][0],
-            taskCompleted: toDoList[index][1],
-            onChanged: (value) => checkBoxChanged(index),
-          );
-        },
-      ),
-      floatingActionButton: Row(
+      body: Stack(
         children: [
-          Expanded(
+          BlocBuilder<TodoCubit, List<Todo>>(
+            builder: (context, todos) {
+              if (todos.isEmpty) {
+                return const Center(
+                  child: Text(
+                    'No tasks yet. Add one below!',
+                    style: TextStyle(fontSize: 16.0, color: Colors.grey),
+                  ),
+                );
+              }
+
+              return ListView.builder(
+                // Items displayed using a list
+                padding: const EdgeInsets.only(
+                  bottom: 80,
+                ), // Add padding at the bottom for the footer
+                itemCount: todos.length,
+                itemBuilder: (context, index) {
+                  final todo = todos[index];
+                  return TodoCard(taskName: todo.data);
+                },
+              );
+            },
+          ),
+
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 20,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: TextField(
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: const Color.fromARGB(255, 79, 44, 144),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                ),
+              padding: const EdgeInsets.all(16.0),
+              child: GlassmorphicButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const AddTaskScreen(),
+                    ),
+                  );
+                },
+                text: 'A D D  T A S K',
               ),
             ),
           ),
-          FloatingActionButton(onPressed: () {}, child: Icon(Icons.add)),
         ],
       ),
     );
