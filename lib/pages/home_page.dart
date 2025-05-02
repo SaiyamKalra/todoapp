@@ -21,7 +21,10 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         // Making the App bar part with text ToDo App displayed on it
         title: const Center(
-          child: Text('T O D O', style: TextStyle(fontWeight: FontWeight.bold)),
+          child: Text(
+            '⌁ T O D O ⌁',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
         ),
       ),
       body: Stack(
