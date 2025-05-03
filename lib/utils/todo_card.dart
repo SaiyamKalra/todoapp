@@ -23,16 +23,13 @@ class TodoCard extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Colors.white.withOpacity(0.1),
-              Colors.white.withOpacity(0.05),
-            ],
+            colors: [Colors.white.withAlpha(25), Colors.white.withAlpha(5)],
           ),
           borderRadius: BorderRadius.circular(16.0),
-          border: Border.all(color: Colors.white.withOpacity(0.2), width: 1.2),
+          border: Border.all(color: Colors.white.withAlpha(50), width: 1.2),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.15),
+              color: Colors.black.withAlpha(38),
               blurRadius: 12,
               offset: Offset(0, 4),
             ),
@@ -64,11 +61,11 @@ class TodoCard extends StatelessWidget {
                     decoration: isCompleted ? TextDecoration.lineThrough : null,
                     color:
                         isCompleted
-                            ? Colors.white.withOpacity(0.6)
-                            : Colors.white.withOpacity(0.95),
+                            ? Colors.white.withAlpha(153)
+                            : Colors.white.withAlpha(242),
                     shadows: [
                       Shadow(
-                        color: Colors.black.withOpacity(0.3),
+                        color: Colors.black.withAlpha(77),
                         offset: Offset(0, 1),
                         blurRadius: 2,
                       ),
